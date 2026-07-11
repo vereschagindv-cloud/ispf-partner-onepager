@@ -1,0 +1,220 @@
+<title>ISPF — партнёрская программа</title>
+<style>
+  /* Единая тёмная тема — сознательный выбор, не переключается под OS/viewer */
+  :root, :root[data-theme="light"], :root[data-theme="dark"]{
+    --bg:#0A0D12; --surface:#12161D; --surface-2:#1A2029;
+    --ink:#E7EBF0; --ink-2:#9BA5B3; --muted:#616B79;
+    --line:#222932; --line-strong:#323B47;
+    --accent:#4F9AE0; --accent-ink:#8FC3F0; --accent-soft:#152B42; --on-accent:#0A0D12;
+    --good:#35B786; --good-soft:#0F2B22;
+    --shadow: 0 1px 0 rgba(255,255,255,0.02) inset;
+  }
+  :root{ color-scheme:dark; }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; height:100%; overflow:hidden; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.32;
+    display:flex; flex-direction:column;
+  }
+  .mono{ font-family:"SF Mono","JetBrains Mono",Menlo,Consolas,"Roboto Mono",monospace; font-variant-numeric:tabular-nums; }
+
+  /* ---------- header ---------- */
+  .topbar{
+    flex:none; display:flex; align-items:center; justify-content:space-between;
+    padding:2.6vh 1.8vw; border-bottom:1px solid var(--line); background:var(--surface);
+  }
+  .brand{ display:flex; align-items:center; gap:13px; font-weight:800; font-size:29px; letter-spacing:-0.01em; }
+  .brand .mark{ width:34px; height:34px; flex:none; display:block; }
+  .topbar .tag{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:16px; color:var(--ink-2); letter-spacing:.05em; }
+  .kpis{ display:flex; gap:44px; }
+  .kpi{ text-align:right; }
+  .kpi .k{ font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .kpi .v{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:27px; font-weight:800; color:var(--accent-ink); }
+
+  /* ---------- body grid ---------- */
+  .board{
+    flex:1; min-height:0;
+    display:grid; grid-template-columns: 1fr 1fr 1.2fr;
+    gap:1px; background:var(--line);
+  }
+  .col{ background:var(--bg); padding:1.8vh 1.3vw; display:flex; flex-direction:column; gap:1.8vh; min-height:0; overflow:hidden; }
+
+  .h{ font-size:14px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--accent-ink); display:flex; align-items:center; gap:7px; }
+  .h::before{ content:""; width:7px; height:7px; background:var(--accent); flex:none; }
+
+  .box{ background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); padding:13px 15px; }
+  .box.tight{ padding:11px 14px; }
+  .box.fill{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:16px; padding-top:18px; padding-bottom:18px; }
+  .box.fill.cmp{ display:grid; align-content:center; }
+  .facts{ display:flex; flex-direction:column; gap:14px; }
+  .frow{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-size:14.5px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .frow:last-child{ border-bottom:none; padding-bottom:0; }
+  .frow .k{ color:var(--ink-2); }
+  .frow .v{ font-family:"SF Mono","JetBrains Mono",monospace; color:var(--ink); font-weight:700; text-align:right; flex:none; max-width:58%; font-size:14.5px; }
+
+  /* licensing mini-compare */
+  .cmp{ display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14.5px; }
+  .cmp .lbl{ color:var(--muted); font-size:12.5px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:5px; }
+  .cmp ul{ margin:0; padding-left:15px; color:var(--ink-2); }
+  .cmp li{ margin-bottom:4px; }
+  .box.fill.cmp .lbl{ font-size:12.5px; margin-bottom:8px; }
+  .box.fill.cmp p{ font-size:14.5px !important; }
+  .box.fill.cmp ul{ padding-left:17px; }
+  .box.fill.cmp li{ font-size:14.5px; margin-bottom:7px; }
+
+  /* tier table */
+  table{ border-collapse:collapse; width:100%; font-size:14.5px; }
+  th,td{ text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
+  th{ font-size:12.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); font-weight:700; font-family:"SF Mono","JetBrains Mono",monospace; }
+  td.num,th.num{ font-family:"SF Mono","JetBrains Mono",monospace; text-align:right; white-space:nowrap; }
+  tr.hero td{ background:var(--accent-soft); font-weight:700; }
+  tr:last-child td{ border-bottom:none; }
+
+  /* service cards */
+  .svc{ display:flex; flex-direction:column; gap:1.4vh; }
+  .svc .box b{ font-size:15px; }
+  .svc .box .price{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:15px; color:var(--accent-ink); font-weight:700; }
+  .svc .box p{ margin:4px 0 0; font-size:14.5px; color:var(--ink-2); line-height:1.4; }
+
+  /* partner grid */
+  .partners{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px; }
+  .partner{ background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); padding:10px 9px; text-align:center; }
+  .partner.gold{ border-color:var(--accent); border-width:1.3px; }
+  .partner .name{ font-size:15px; font-weight:800; }
+  .partner .pct{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:27px; font-weight:800; color:var(--accent-ink); line-height:1.15; margin-top:3px; }
+  .partner .req{ font-size:13px; color:var(--ink-2); line-height:1.35; margin-top:6px; }
+
+  .steps{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .step{ background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow); padding:8px 10px; }
+  .step .n{ font-family:"SF Mono","JetBrains Mono",monospace; color:var(--accent); font-size:12.5px; font-weight:700; }
+  .step .t{ font-size:15px; font-weight:700; margin-top:3px; }
+  .step p{ margin:3px 0 0; font-size:13.5px; color:var(--ink-2); line-height:1.3; }
+
+  /* bench chart */
+  .bench{ display:flex; flex-direction:column; gap:4px; }
+  .brow{ display:grid; grid-template-columns:102px 1fr 62px; align-items:center; gap:8px; }
+  .brow .lb{ font-size:13.5px; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .brow .lb.hero{ color:var(--ink); font-weight:800; }
+  .btrack{ position:relative; height:10px; background:var(--surface-2); }
+  .bfill{ position:absolute; top:0; left:0; height:100%; background:var(--line-strong); }
+  .bfill.accent{ background:var(--accent); }
+  .bval{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:13.5px; text-align:right; }
+
+  ul.bullets{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .bullets li{ position:relative; padding-left:15px; font-size:14.5px; line-height:1.4; color:var(--ink-2); }
+  .bullets li::before{ content:"—"; position:absolute; left:0; top:0; color:var(--accent); font-weight:700; }
+  .bullets li b{ color:var(--ink); }
+
+  .cta{ margin-top:auto; flex:none; background:var(--accent); color:var(--on-accent); padding:12px 15px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cta .t{ font-size:16px; font-weight:800; }
+  .cta .s{ font-size:13px; opacity:.75; margin-top:2px; }
+  .cta .btn{ font-family:"SF Mono","JetBrains Mono",monospace; font-size:14px; font-weight:700; border:1px solid currentColor; padding:8px 14px; white-space:nowrap; flex:none; color:inherit; text-decoration:none; }
+  .cta .btn:hover{ background:var(--on-accent); color:var(--accent); }
+
+</style>
+
+<div class="topbar">
+  <div class="brand"><svg class="mark" viewBox="0 0 92 92" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g><path d="M21.5625 46C21.5625 56.359 28.1356 65.6278 37.9189 69.0643C39.3234 69.5576 40.8618 68.8192 41.3553 67.4146C41.8487 66.0102 41.11 64.4717 39.7055 63.9783C32.078 61.2991 26.9531 54.0741 26.9531 46C26.9531 35.4974 35.4974 26.9531 46 26.9531C48.8905 26.9531 51.6673 27.5867 54.2538 28.8359C55.5942 29.4838 57.2055 28.9218 57.8531 27.5815C58.5007 26.2412 57.939 24.6298 56.5985 23.9822C54.0883 22.7695 51.4395 22.009 48.6953 21.7091V16.2966C61.7027 17.4897 72.2824 26.9891 75.0947 39.4083C75.4228 40.8575 76.8633 41.7709 78.3186 41.4419C79.7705 41.1132 80.6808 39.6698 80.3521 38.2179C76.8019 22.5386 62.7438 10.7812 46 10.7812C39.3338 10.7812 32.8392 12.661 27.2185 16.2172C25.9605 17.013 25.5859 18.6782 26.3819 19.936C27.1777 21.1941 28.8431 21.5686 30.1007 20.7726C34.0966 18.2444 38.6157 16.7217 43.3047 16.2978V21.7118C31.0935 23.0579 21.5625 33.4361 21.5625 46Z" fill="#FFFFFF"/><path d="M78.3182 50.5587C76.8669 50.2299 75.4231 51.1404 75.0943 52.5922C74.0553 57.1809 71.909 61.4729 68.8974 65.0857L65.0704 61.2587C68.462 57.0183 70.4375 51.674 70.4375 46C70.4375 42.2907 69.6235 38.7248 68.0178 35.4013C67.3702 34.0612 65.759 33.4995 64.4183 34.1469C63.078 34.7945 62.5163 36.406 63.1639 37.7464C64.0198 39.518 64.5865 41.379 64.8586 43.3047H59.388C58.133 37.0613 52.6077 32.3438 46.0002 32.3438C38.47 32.3438 32.3439 38.4699 32.3439 46C32.3439 53.5302 38.47 59.6563 46.0002 59.6563C52.6077 59.6563 58.133 54.9388 59.388 48.6953H64.8516C63.8548 55.6464 59.0613 61.6016 52.2945 63.9785C50.8902 64.4719 50.1515 66.0104 50.6447 67.4148C51.1382 68.8193 52.6766 69.5578 54.0811 69.0645C56.734 68.1327 59.1483 66.769 61.2621 65.0739L65.0887 68.9005C59.7206 73.384 52.9235 75.8282 46 75.8282C29.5527 75.8282 16.1719 62.4474 16.1719 46C16.1719 40.3557 17.7628 34.858 20.7726 30.1009C21.5686 28.8429 21.194 27.1779 19.936 26.3821C18.678 25.5863 17.0132 25.9607 16.2172 27.2187C12.661 32.8394 10.7812 39.3338 10.7812 46C10.7812 65.4198 26.5803 81.2188 46 81.2188C62.7442 81.2188 76.8013 69.462 80.3519 53.7827C80.6806 52.331 79.7701 50.8875 78.3182 50.5587ZM46 54.2657C41.4424 54.2657 37.7344 50.5576 37.7344 46C37.7344 41.4424 41.4424 37.7344 46 37.7344C50.5576 37.7344 54.2656 41.4424 54.2656 46C54.2656 50.5576 50.5576 54.2657 46 54.2657Z" fill="#FFFFFF"/><path d="M46 0C20.5771 0 0 20.5737 0 46C0 71.4229 20.5737 92 46 92C71.4227 92 92 71.4263 92 46C92 20.5771 71.4263 0 46 0ZM46 86.6094C23.5565 86.6094 5.39062 68.4467 5.39062 46C5.39062 23.5565 23.5533 5.39062 46 5.39062C68.4433 5.39062 86.6094 23.5531 86.6094 46C86.6094 68.4433 68.4469 86.6094 46 86.6094Z" fill="#FFFFFF"/></g></svg>ISPF</div>
+  <div class="tag">ПАРТНЁРСКАЯ ПРОГРАММА · МОДЕЛЬ ЛИЦЕНЗИРОВАНИЯ</div>
+  <div class="kpis">
+    <div class="kpi"><div class="k">Лицензия</div><div class="v">7,0 млн ₽</div></div>
+    <div class="kpi"><div class="k">Скидка партнёра</div><div class="v">до 40%</div></div>
+    <div class="kpi"><div class="k">Ставка часа</div><div class="v">4 200 ₽</div></div>
+    <div class="kpi"><div class="k">Payback</div><div class="v">~4 мес</div></div>
+  </div>
+</div>
+
+<div class="board">
+
+  <!-- COLUMN 1 — LICENSING -->
+  <div class="col">
+    <div class="h">Лицензия — Open Core</div>
+    <div class="box tight cmp">
+      <div>
+        <div class="lbl">Community · бесплатно</div>
+        <ul><li>Modbus / MQTT / SNMP</li><li>Базовый Rule Engine</li><li>Single-Tenant</li></ul>
+      </div>
+      <div>
+        <div class="lbl">Enterprise · 7,0 млн ₽</div>
+        <ul><li>Multi-Tenancy · 5 уровней</li><li>RBAC + аудит-логи</li><li>HA / Clustering</li></ul>
+      </div>
+    </div>
+    <div class="h">Три уровня</div>
+    <div class="box tight" style="flex:1; min-height:0;">
+      <table>
+        <tr><th>Уровень</th><th class="num">Скидка</th><th class="num">Год 1</th><th class="num">Далее</th></tr>
+        <tr><td>1 · Лицензия</td><td class="num">0%</td><td class="num">7,00М</td><td class="num">0</td></tr>
+        <tr class="hero"><td>2 · + AMS ★</td><td class="num">5%</td><td class="num">7,98М</td><td class="num">1,33М/г</td></tr>
+        <tr><td>3 · + Внедрение</td><td class="num">15%</td><td class="num">9,64М</td><td class="num">1,19М/г</td></tr>
+      </table>
+    </div>
+    <div class="h">Условия и лимиты</div>
+    <div class="box tight fill">
+      <div class="facts">
+        <div class="frow"><span class="k">Лимит тегов на инстанс</span><span class="v">10 000</span></div>
+        <div class="frow"><span class="k">Расширение +10k тегов</span><span class="v">800 000 ₽ разово</span></div>
+        <div class="frow"><span class="k">Скидка AMS на продлении</span><span class="v">сохраняется, пока непрерывна</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMN 2 — SERVICE -->
+  <div class="col svc" style="gap:0.85vh;">
+    <div class="h">Из чего складывается сервис</div>
+    <div class="box tight"><b>AMS</b> · <span class="price">1,4 млн ₽/год</span><p>20% от лицензии, ежегодно. Обновления, L3 (Blocker 15м · Major 1ч · Minor 4ч), SLA-мониторинг, 40 ч/год на правки.</p></div>
+    <div class="box tight"><b>Проф. услуги</b> · <span class="price">4 200 ₽/час</span><p>Пакет 700 ч = 2,94 млн ₽: обследование, развёртывание, интеграции, дашборды, обучение, пилот.</p></div>
+    <div class="box tight"><b>Доп. коннектор</b> · <span class="price">≈60 ч · 252 000 ₽</span><p>Интеграция с проприетарными системами заказчика.</p></div>
+    <div class="box tight"><b>Кастомная аналитика</b> · <span class="price">часы по факту объёма</span><p>Аналитический framework позволяет адаптировать бизнес-требования заказчика под AI-движок платформы. AI-движок ISPF ускоряет разработку в несколько раз — цена для клиента не меняется, профит идёт в маржу и скорость поставки интегратора.</p></div>
+    <div class="h">OEM / White Label — договорная цена</div>
+    <div class="box tight fill cmp">
+      <div>
+        <div class="lbl">Подуровень 1 · Интегратор</div>
+        <p style="margin:0 0 6px; font-size:12.5px; color:var(--accent-ink); font-weight:700;">от 4 млн ₽/год · ориентир</p>
+        <ul><li>Свой домен и бренд</li><li>Мобильное приложение</li></ul>
+      </div>
+      <div>
+        <div class="lbl">Подуровень 2 · Завод</div>
+        <p style="margin:0 0 6px; font-size:12.5px; color:var(--accent-ink); font-weight:700;">договорная · опция сверху</p>
+        <ul><li>Изолированный контур</li><li>Бренд конечного завода</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMN 3 — PARTNERS + POSITIONING -->
+  <div class="col" style="gap:1.1vh;">
+    <div class="h">Партнёрская сетка</div>
+    <div class="partners">
+      <div class="partner"><div class="name">Authorized</div><div class="pct">20%</div><div class="req">2 инж., 1 продавец<br>≥1 сделка/год</div></div>
+      <div class="partner"><div class="name">Silver</div><div class="pct">30%</div><div class="req">4 инж., 2 продавца<br>план $100k/год</div></div>
+      <div class="partner gold"><div class="name">Gold</div><div class="pct">40%</div><div class="req">8+ инж., архитектор<br>план $300k/год</div></div>
+    </div>
+    <div class="h">Регистрация сделки</div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><div class="t">Заявка</div><p>ИНН, ЛПР, бюджет, масштаб</p></div>
+      <div class="step"><div class="n">02</div><div class="t">Верификация</div><p>48 часов на проверку</p></div>
+      <div class="step"><div class="n">03</div><div class="t">Блокировка</div><p>Закреплено на 6 месяцев</p></div>
+      <div class="step"><div class="n">04</div><div class="t">Защита сделки</div><p>Конкуренты — только по RRP</p></div>
+    </div>
+    <div class="h">Почему ISPF</div>
+    <div class="box tight bench">
+      <div class="brow"><span class="lb">ThingsBoard PE</span><div class="btrack"><div class="bfill" style="width:8.5%"></div></div><span class="bval">0,52М</span></div>
+      <div class="brow"><span class="lb">Zabbix Ent.</span><div class="btrack"><div class="bfill" style="width:28.6%"></div></div><span class="bval">1,74М</span></div>
+      <div class="brow"><span class="lb">InfluxDB Ent.</span><div class="btrack"><div class="bfill" style="width:71.4%"></div></div><span class="bval">4,35М</span></div>
+      <div class="brow"><span class="lb">Grafana Ent.</span><div class="btrack"><div class="bfill" style="width:100%"></div></div><span class="bval">6,09М</span></div>
+      <div class="brow"><span class="lb hero">ISPF, год 1</span><div class="btrack"><div class="bfill accent" style="width:100%"></div></div><span class="bval">7,98М</span></div>
+      <div class="brow"><span class="lb hero">ISPF, год 2+</span><div class="btrack"><div class="bfill accent" style="width:21.8%"></div></div><span class="bval">1,33М</span></div>
+    </div>
+    <ul class="bullets">
+      <li><b>На горизонте 3+ лет</b> бессрочная лицензия дешевле подписки.</li>
+      <li>Enterprise-лицензия продаёт то, что нужно для промышленной эксплуатации: <b>масштаб на холдинг, отказоустойчивость, интеграции, юридический SLA.</b></li>
+    </ul>
+    <div class="cta">
+      <div><div class="t">Стать партнёром</div><div class="s">Прайс, демо-стенд, защита сделок</div></div>
+      <a class="btn" href="https://partner.ispf.ai" target="_blank" rel="noopener">partner.ispf.ai</a>
+    </div>
+  </div>
+
+</div>
